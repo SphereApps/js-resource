@@ -15,7 +15,7 @@ const useToken = token => {
   if (!token) {
     token = getToken();
   }
-  axios.defaults.headers.common = { Authorization: `Bearer ${token}` };
+  axios.defaults.headers.common["Authorization"] = `Bearer ${token}`;
 };
 
 const resetToken = () => {
@@ -148,9 +148,17 @@ class Api {
     options.url = this.name + (route !== null ? `/${route}` : "");
 
     if (!uploadingFile) {
-      options.headers = {
-        Accept: "application/json",
-      };
+      if (!options.headers) {
+        options.headers = {};
+      }
+
+      options.headers.Accept = "application/json";
+    }
+
+    if (uploadingFile && options.method === "patch") {
+      options.method = "post";
+
+      options.data.append("_method", "PATCH");
     }
 
     options.paramsSerializer = params => {
