@@ -1,5 +1,5 @@
-import Base from './Base';
-import ResourceCollection from './ResourceCollection';
+import Base from "./Base";
+import ResourceCollection from "./ResourceCollection";
 
 class Resource extends Base {
   static collection(data = null) {
@@ -101,7 +101,7 @@ class Resource extends Base {
    * @return {Promise}
    */
   $find(id, params = {}) {
-    return this.$api('read', id, params);
+    return this.$api("read", id, params);
   }
 
   /**
@@ -110,9 +110,9 @@ class Resource extends Base {
    */
   $save() {
     if (this.$isNew) {
-      return this.$api('create', this.$getData());
+      return this.$api("create", this.$getData());
     } else {
-      return this.$api('update', this.id, this.$getData(true));
+      return this.$api("update", this.id, this.$getData(true));
     }
   }
 
@@ -122,10 +122,10 @@ class Resource extends Base {
    */
   $delete() {
     if (!this.id) {
-      throw new Error('Cannot delete new resource without id attribute');
+      throw new Error("Cannot delete new resource without id attribute");
     }
 
-    return this.$api('delete', this.id);
+    return this.$api("delete", this.id);
   }
 
   /*---------------------------------------------------------------------------

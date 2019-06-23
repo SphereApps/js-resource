@@ -1,14 +1,14 @@
-import axios from 'axios';
-import qs from 'qs';
+import axios from "axios";
+import qs from "qs";
 
-axios.defaults.baseURL = '/api/';
+axios.defaults.baseURL = "/api/";
 
 const rememberToken = (token, expiresAt) => {
-  window.localStorage.setItem('api:token', token);
-  window.localStorage.setItem('api:expiresAt', expiresAt);
+  window.localStorage.setItem("api:token", token);
+  window.localStorage.setItem("api:expiresAt", expiresAt);
 };
 
-const getToken = () => window.localStorage.getItem('api:token');
+const getToken = () => window.localStorage.getItem("api:token");
 // const getTokenExpiresAt = () => window.localStorage.getItem("api:expiresAt");
 
 const useToken = token => {
@@ -19,8 +19,8 @@ const useToken = token => {
 };
 
 const resetToken = () => {
-  window.localStorage.removeItem('api:token');
-  window.localStorage.removeItem('api:expiresAt');
+  window.localStorage.removeItem("api:token");
+  window.localStorage.removeItem("api:expiresAt");
   useToken();
 };
 
@@ -46,6 +46,15 @@ class Api {
     useToken();
   }
 
+  setBaseUrl(url) {
+    axios.defaults.baseURL = url;
+  }
+
+  /**
+   * Set current module name
+   * @param name Module name
+   * @returns {Api}
+   */
   for(name) {
     this.name = name;
     return this;
@@ -68,18 +77,18 @@ class Api {
 
   login(email, password) {
     return tokenPromise(
-      this.for('auth').request('post', 'login', {
+      this.for("auth").request("post", "login", {
         data: { email, password },
       })
     );
   }
 
-  user() {
-    return this.for('auth').request('get', 'user');
+  user(params) {
+    return this.for("auth").request("get", "user", { params });
   }
 
   logout() {
-    let promise = this.for('auth').request('delete', 'logout');
+    let promise = this.for("auth").request("delete", "logout");
     promise.finally(() => {
       resetToken();
     });
@@ -87,35 +96,35 @@ class Api {
   }
 
   refreshToken() {
-    return tokenPromise(this.for('auth').request('patch', 'refresh'));
+    return tokenPromise(this.for("auth").request("patch", "refresh"));
   }
 
   onSuccess(callback) {
-    this.on('onSuccess', callback);
+    this.on("onSuccess", callback);
   }
 
   onError(callback) {
-    this.on('onError', callback);
+    this.on("onError", callback);
   }
 
   fetch(params) {
-    return this.request('get', null, { params });
+    return this.request("get", null, { params });
   }
 
   read(id, params) {
-    return this.request('get', id, { params });
+    return this.request("get", id, { params });
   }
 
   create(data) {
-    return this.request('post', null, { data });
+    return this.request("post", null, { data });
   }
 
   update(id, data) {
-    return this.request('patch', id, { data });
+    return this.request("patch", id, { data });
   }
 
   delete(id) {
-    return this.request('delete', id);
+    return this.request("delete", id);
   }
 
   request(httpMethod, route = null, options = {}) {
@@ -123,9 +132,7 @@ class Api {
     //   this.name = this._nameStack.pop();
     // }
 
-    const uploadingFile = options.data
-      ? Object.values(options.data).some(value => value instanceof File)
-      : false;
+    const uploadingFile = options.data ? Object.values(options.data).some(value => value instanceof File) : false;
 
     if (uploadingFile) {
       const requestFormData = new FormData();
@@ -138,11 +145,11 @@ class Api {
     }
 
     options.method = httpMethod;
-    options.url = this.name + (route !== null ? `/${route}` : '');
+    options.url = this.name + (route !== null ? `/${route}` : "");
 
     if (!uploadingFile) {
       options.headers = {
-        Accept: 'application/json',
+        Accept: "application/json",
       };
     }
 
@@ -162,10 +169,10 @@ class Api {
 
     promise
       .then(data => {
-        this.fire('onSuccess', [data]);
+        this.fire("onSuccess", [data]);
       })
       .catch(error => {
-        this.fire('onError', [error]);
+        this.fire("onError", [error]);
       });
 
     return promise;

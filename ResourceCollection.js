@@ -1,5 +1,5 @@
-import Base from './Base';
-import Resource from './Resource';
+import Base from "./Base";
+import Resource from "./Resource";
 
 class ResourceCollection extends Base {
   $model = Resource;
@@ -39,18 +39,18 @@ class ResourceCollection extends Base {
    * @return {Promise}
    */
   $fetch(params = {}) {
-    return this.$api('fetch', params);
+    return this.$api("fetch", params);
   }
 
   $delete(record) {
-    if (typeof record === 'number') {
+    if (typeof record === "number") {
       record = this.find(record);
     }
     const recordId = record.id;
     if (recordId) {
-      const foundRecord = this.find('id', recordId);
+      const foundRecord = this.find("id", recordId);
       if (foundRecord) {
-        this.remove('id', recordId);
+        this.remove("id", recordId);
         foundRecord.$delete();
       }
     }
@@ -76,7 +76,6 @@ class ResourceCollection extends Base {
 
   /**
    * Добавление объекта в коллекцию. Можно передать как простой объект так и элемент Resource
-   * @param {Resource} data
    */
   add(data) {
     let record = data.$name ? data : this.$model.make(this.$name, data);
@@ -103,7 +102,7 @@ class ResourceCollection extends Base {
   findIndex(field, value, skip = 0) {
     if (arguments.length === 1) {
       value = +field;
-      field = 'id';
+      field = "id";
     }
 
     for (let i = skip; i < this.items.length; i++) {
@@ -121,7 +120,15 @@ class ResourceCollection extends Base {
    * @return {Resource}
    */
   first() {
-    return this.items[0];
+    return this.items.length ? this.items[0] : null;
+  }
+
+  /**
+   * Последний элемент коллекции
+   * @return {Resource}
+   */
+  last() {
+    return this.items.length ? this.items[this.items.length - 1] : null;
   }
 
   /**
@@ -160,13 +167,13 @@ class ResourceCollection extends Base {
    * @param  {Object} query
    * @return {Array}
    */
-  filter(query) {
+  filter(query, strict = true) {
     return this.items.filter(item => {
       const keys = Object.keys(query);
       for (var i = keys.length - 1; i >= 0; i--) {
         let key = keys[i];
         let val = query[key];
-        if (item[key] !== val) {
+        if ((strict && item[key] !== val) || (!strict && item[key] != val)) {
           return false;
         }
       }

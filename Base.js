@@ -1,16 +1,16 @@
-import api from './';
-import State from './State';
+import api from "./";
+import State from "./State";
 
 const statePrefixForMethod = {
-  fetch: 'load',
-  read: 'load',
-  create: 'sav',
-  update: 'sav',
-  delete: 'delet',
+  fetch: "load",
+  read: "load",
+  create: "sav",
+  update: "sav",
+  delete: "delet",
 };
 
 const _getState = (method, end = null) => {
-  const statePrefix = statePrefixForMethod[method] || 'load';
+  const statePrefix = statePrefixForMethod[method] || "load";
   return {
     [`${statePrefix}ing`]: end === false ? false : !end,
     [`${statePrefix}ed`]: end === false ? false : !!end,
