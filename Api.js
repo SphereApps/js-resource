@@ -33,6 +33,8 @@ const tokenPromise = promise => {
 };
 
 class Api {
+  customResolver = null;
+
   constructor(name = null) {
     if (name) {
       this.for(name);
@@ -167,8 +169,8 @@ class Api {
 
     let promise = new Promise((resolve, reject) => {
       axios(options)
-        .then(({ data }) => {
-          data.success ? resolve(data) : reject(data);
+        .then(response => {
+          this.resolve(response, resolve, reject);
         })
         .catch(error => {
           reject(error);
@@ -184,6 +186,17 @@ class Api {
       });
 
     return promise;
+  }
+
+  resolve(response, resolve, reject) {
+    if (this.customResolver) {
+      return this.customResolver(response, resolve, reject);
+    }
+    return response.data.success ? resolve(response.data) : reject(response.data);
+  }
+
+  setCustomResolver(cb) {
+    this.customResolver = cb;
   }
 }
 
