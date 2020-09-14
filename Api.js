@@ -117,12 +117,12 @@ class Api {
     return this.request("get", id, { params });
   }
 
-  create(data) {
-    return this.request("post", null, { data });
+  create(data, params) {
+    return this.request("post", null, { data, params });
   }
 
-  update(id, data) {
-    return this.request("patch", id, { data });
+  update(id, data, params) {
+    return this.request("patch", id, { data, params });
   }
 
   delete(id) {

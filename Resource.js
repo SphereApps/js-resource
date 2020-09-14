@@ -108,11 +108,11 @@ class Resource extends Base {
    * API: Save record (create or update)
    * @return {Promise}
    */
-  $save() {
+  $save(params = {}) {
     if (this.$isNew) {
-      return this.$api("create", this.$getData());
+      return this.$api("create", this.$getData(), params);
     } else {
-      return this.$api("update", this.id, this.$getData(true));
+      return this.$api("update", this.id, this.$getData(true), params);
     }
   }
 
