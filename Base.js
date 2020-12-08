@@ -19,6 +19,7 @@ const _getState = (method, end = null) => {
 
 class Base {
   $name = null;
+  $error = null;
 
   static make(name, data = null, state = null) {
     let obj = new this(data);
@@ -44,13 +45,15 @@ class Base {
   $api(method, ...args) {
     const apiPromise = api.for(this.$name)[method].apply(api, args);
     this.$state.update(_getState(method));
+    this.$error = null;
     apiPromise
       .then(({ data }) => {
         const state = _getState(method, true);
         this.$assign(data, state);
         this.$state.update(state);
       })
-      .catch(() => {
+      .catch(error => {
+        this.$error = error;
         this.$state.update(_getState(method, false));
       });
     return apiPromise;
