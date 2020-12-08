@@ -1,5 +1,5 @@
-import Base from "./Base";
-import Resource from "./Resource";
+import Base from './Base';
+import Resource from './Resource';
 
 class ResourceCollection extends Base {
   $model = Resource;
@@ -39,18 +39,18 @@ class ResourceCollection extends Base {
    * @return {Promise}
    */
   $fetch(params = {}) {
-    return this.$api("fetch", params);
+    return this.$api('fetch', params);
   }
 
   $delete(record) {
-    if (typeof record === "number") {
+    if (typeof record === 'number') {
       record = this.find(record);
     }
     const recordId = record.id;
     if (recordId) {
-      const foundRecord = this.find("id", recordId);
+      const foundRecord = this.find('id', recordId);
       if (foundRecord) {
-        this.remove("id", recordId);
+        this.remove('id', recordId);
         foundRecord.$delete();
       }
     }
@@ -102,7 +102,7 @@ class ResourceCollection extends Base {
   findIndex(field, value, skip = 0) {
     if (arguments.length === 1) {
       value = +field;
-      field = "id";
+      field = 'id';
     }
 
     for (let i = skip; i < this.items.length; i++) {
