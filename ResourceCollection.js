@@ -50,8 +50,9 @@ class ResourceCollection extends Base {
     if (recordId) {
       const foundRecord = this.find('id', recordId);
       if (foundRecord) {
-        this.remove('id', recordId);
-        foundRecord.$delete();
+        foundRecord.$delete().then(() => {
+          this.remove('id', recordId);
+        });
       }
     }
   }

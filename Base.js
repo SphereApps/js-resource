@@ -49,7 +49,9 @@ class Base {
     apiPromise
       .then(({ data }) => {
         const state = _getState(method, true);
-        this.$assign(data, state);
+        if (method !== 'delete') {
+          this.$assign(data, state);
+        }
         this.$state.update(state);
       })
       .catch(error => {
